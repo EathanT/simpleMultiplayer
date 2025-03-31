@@ -1,8 +1,9 @@
 obj/x64/Debug/simpleMultiplayer/main.o: ../../src/main.cpp \
- /usr/include/stdc-predef.h ../../src/bullet.h \
- ../../include/resource_dir.h ../external/raylib-master/src/raylib.h \
- /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h \
- /usr/include/c++/13/vector /usr/include/c++/13/bits/requires_hosted.h \
+ /usr/include/stdc-predef.h ../../src/game.h ../../include/resource_dir.h \
+ ../external/raylib-master/src/raylib.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h ../../src/player.h \
+ ../../src/bullet.h /usr/include/c++/13/vector \
+ /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -178,10 +179,12 @@ obj/x64/Debug/simpleMultiplayer/main.o: ../../src/main.cpp \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc
 /usr/include/stdc-predef.h:
-../../src/bullet.h:
+../../src/game.h:
 ../../include/resource_dir.h:
 ../external/raylib-master/src/raylib.h:
 /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h:
+../../src/player.h:
+../../src/bullet.h:
 /usr/include/c++/13/vector:
 /usr/include/c++/13/bits/requires_hosted.h:
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h:

@@ -1,0 +1,1 @@
+#include "resource_dir.h"	// utility header for SearchAndSetResourceDir

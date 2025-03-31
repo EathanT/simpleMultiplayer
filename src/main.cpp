@@ -1,79 +1,58 @@
-#include "bullet.h"
-
-
-// player 
-void drawPlayer(Vector2 p1){
-	DrawRectangle(p1.x,p1.y,20,20,BLUE);
-}
-
-
+#include "game.h"
+#include "player.h"
 
 int main ()
 {
 	
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
-	// Create the window and OpenGL context
-	InitWindow(1280, 800, "Hello Raylib");
+	InitWindow(1280, 800, "Simple Multiplayer");
 
 	SearchAndSetResourceDir("resources");
 
-	// store player position in center of screen	
-	Vector2 p1 = {GetScreenWidth()/2.0f,GetScreenHeight()/2.0f};
 
-	//Bullet logic
+	// Bullet logic
 	BulletManager bulletManager;
 
-	//Fire-rate control
-	float fireRate = 0.5f;
-	float lastFired = 0.0f;
+	// Player logic
+	PlayerManager playerManager;
+	playerManager.addPlayer(DEFAULT_ID, DEFAULT_POSITION, DEFAULT_HEALTH, DEFAULT_SPEED);
+    float fireRate = 0.5f;
+    float lastFired = 0.0f;
 
-
-	// game loop
-	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
+	// run the loop until the user presses ESCAPE or presses the Close button on the window
+	while (!WindowShouldClose())
 	{
-
 		//deltaTime(in seconds since last frame)
 		float dt = GetFrameTime();
 
-		// Player Movement	
-	        if (IsKeyDown(KEY_D)) p1.x += 250.0f * dt;
-                if (IsKeyDown(KEY_A)) p1.x -= 250.0f * dt;
-                if (IsKeyDown(KEY_W)) p1.y -= 250.0f * dt;
-                if (IsKeyDown(KEY_S)) p1.y += 250.0f * dt;
+		// Update Players
+		playerManager.updatePlayers(dt);
 
-		// Firing bullets
-                if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+
+		// if player ID is 0 (main player)
+        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+			if((GetTime() - lastFired) >= fireRate){
 			//If enough time has passed since last shot
-			if((GetTime() - lastFired)>= fireRate){
 				bulletManager.addBullet(
-					p1, //start pos
-					GetMousePosition(), // target pos
-					300.0f, //bullet speed(pixels/sec)
-					5.0f, // bullet radius
-					600.0f, // bullet max travel dist
-					BulletType::Normal	
+					playerManager.getPlayerPosition(0), // Current Pos of player is bullets start pos
+					GetMousePosition() // target pos
 				);
 				//Last fired time update
 				lastFired = GetTime();
 			}
-		}
+		}	
 
 		// Update bullets
 		bulletManager.updateBullets(dt);	
 
 		// drawing
 		BeginDrawing();
-	        	ClearBackground(WHITE);
-
-          		drawPlayer(p1);
-			bulletManager.drawBullets();
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
-        	EndDrawing();
+	    ClearBackground(WHITE);
+        EndDrawing();
 	}
 
 
-	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
 }
