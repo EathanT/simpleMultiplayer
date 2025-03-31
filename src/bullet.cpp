@@ -1,30 +1,13 @@
 #include "bullet.h"
 
-void BulletManager::drawBullet(const Bullet& bull) const{
-	switch(bull.type){
-		case BulletType::Normal: {	
-			DrawCircle(bull.position.x, bull.position.y, bull.radius, BLACK);
-			break;
-		}
-		case BulletType::Laser:{	
-			DrawCircle(bull.position.x, bull.position.y, bull.radius, RED);
-			break;	
-		}
-		case BulletType::Explosive:{	
-			DrawCircle(bull.position.x, bull.position.y, bull.radius, ORANGE);
-			break;
-		}
-		default:{ // Normal Bullet
-			DrawCircle(bull.position.x, bull.position.y, bull.radius, BLACK);
-			break;
-		}
-	}
+void BulletManager::drawBullet(Vector2 position, float radius, Color color){
+	DrawCircle(position.x, position.y, radius, color);
 }
 
 
 
 //Add new bullet
-void BulletManager::addBullet(Vector2 startPos, Vector2 targetPos, float speed, float radius, float maxDistance, BulletType bulletType){	
+void BulletManager::addBullet(Vector2 startPos, Vector2 targetPos){	
 
 	//Getting the initial direction from start to target
 	Vector2 dir{
@@ -43,11 +26,7 @@ void BulletManager::addBullet(Vector2 startPos, Vector2 targetPos, float speed, 
 	Bullet newBullet;
 	newBullet.position = startPos;
 	newBullet.velocity = dir;
-	newBullet.speed = speed;
 	newBullet.distanceTraveled = 0.0f;
-	newBullet.maxDistance = maxDistance;
-	newBullet.radius = radius;
-	newBullet.type = bulletType; 
 	
 	//Add to bullets vector
 	bullets.push_back(newBullet);	
@@ -56,26 +35,27 @@ void BulletManager::addBullet(Vector2 startPos, Vector2 targetPos, float speed, 
 
 
 //Update Bullet each frame
-void BulletManager::updateBullets(float deltaTime){
+void BulletManager::updateBullets(float deltaTime){	
 	//iterate over all bullets
-
-        for(size_t i = 0; i < bullets.size();){
+    for(size_t i = 0; i < bullets.size();){
 		Bullet& b = bullets[i];
-		
+
+
 		// Move the bullet based of velocity * speed * deltaTime
 		Vector2 movement{
-			b.velocity.x * b.speed * deltaTime,
-			b.velocity.y * b.speed * deltaTime
+			b.velocity.x * 300.0f * deltaTime,
+			b.velocity.y * 300.0f * deltaTime
 		};	
 
 		// Update the bullet's pos and far its traveld
 		b.position.x += movement.x;
 		b.position.y += movement.y;
+		
 		//Increase traveled dis by magnitude of movement
 		b.distanceTraveled += sqrt(movement.x * movement.x + movement.y * movement.y);
 
 		// Check if bullet went passed its max dis
-		if(b.distanceTraveled >= b.maxDistance){
+		if(b.distanceTraveled >= 600.0f){
 			// Remove bullet
 			bullets.erase(bullets.begin() + i);	
 		} else {
@@ -83,16 +63,13 @@ void BulletManager::updateBullets(float deltaTime){
 			i++;
 		}	
 
+    	// Draw updated bullet
+    	drawBullet(b.position, 5.0f, BLACK);
 		
 	}
+
 }
 
-// Draw all bullets
-void BulletManager::drawBullets() const{
-	for(const Bullet& b : bullets){
-		drawBullet(b);
-	}
-}
 
 //Get how far bullet has traveled
 float BulletManager::getDistanceTraveled(size_t index) const{
